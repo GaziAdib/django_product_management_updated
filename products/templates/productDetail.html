@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+  
+
+<div class="container">
+
+  <div class="row justify-content-center">
+      <div class="col-md-8">
+        <a href="{% url 'showProducts' %}" class="btn btn-primary mt-2">Back</a>
+          <div class="card m-5 p-2" style="width: 25rem;">
+              <img src="{{ eachProduct.image.url }}" class="card-img-top" alt="...">
+              <div class="card-body">
+                  <h5 class="card-title m-1"><b>Name:</b> {{ eachProduct.name }}</h5>
+                  <h4 class="card-subtitle m-1"><b>Price:</b> ${{ eachProduct.price }}</h4>
+                  <p style="font-size: 14px;" class="btn btn-warning m-1 p-1">{{ eachProduct.category.name }}</p>
+                  <hr>
+                  <p style="font-size: 15px;" class="card-text mt-1">Description: {{ eachProduct.description }}</p>
+                  <p style="font-size: 13px;" class="cart-text mt-1">added - {{ eachProduct.created_at }}</p>
+                  <a href="{% url 'deleteProduct' eachProduct.id %}" class="btn btn-danger m-1"> Delete </a>
+                  <a href="{% url 'updateProduct' eachProduct.id %}" class="btn btn-primary m-1"> Update </a>
+              </div>
+          </div>
+      </div>
+
+      <div class="col-md-4">
+         <div style="margin: 5px padding:2px">
+            Add Comments ({{ num_comments }})
+            <br>
+            <hr>
+
+            {% if not eachProduct.comments.all %}
+
+                <p>Not comments added yet...</p>
+               <p><a class="btn btn-primary" href="{% url 'add-comment' eachProduct.id %}">  Add Comment </a></p>
+
+            {% else %}
+
+                {% for comment in eachProduct.comments.all %}
+
+                    <h5><strong>{{ comment.commenter_name }}</strong></h5>
+                    <p>{{ comment.comment_body }}</p>
+                    <p><small>{{ comment.date_added }}</small></p>
+
+                    {% if request.user.username == comment.commenter_name %}
+
+                        <p><a class="btn btn-primary" href="{% url 'add-comment' eachProduct.id %}">  Add Comment </a></p>
+                        <p><a class="btn btn-danger" href="{% url 'delete-comment' eachProduct.id %}">  Delete Comment </a></p>
+                      
+                      
+                    {% endif %}
+                    
+                    
+
+                {% endfor %}
+
+            {% endif %}
+
+    
+
+         </div>
+      </div>
+  </div>
+
+</div>
+
+
+{% endblock %}
+
